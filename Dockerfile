@@ -4,4 +4,4 @@ WORKDIR /app
 ADD . /app/
 RUN pip install -r requirements.txt
 
-CMD ["uwsgi","--ini", "/app/uwsgi.ini"]
+# CMD ["uwsgi","--ini", "/app/uwsgi.ini"]

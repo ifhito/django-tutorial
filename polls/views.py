@@ -3,8 +3,10 @@ from django.template import loader
 from django.http import Http404, HttpResponseRedirect
 from django.urls import reverse
 from .models import Question, Choice
-
+import csv
 from django.views import generic
+from django_pandas.io import read_frame
+import pandas as pd
 # # Create your views here.
 # def index(request):
 #     latest_question_list = Question.objects.order_by('-pub_date')[:5]
@@ -53,3 +55,16 @@ def vote(request, question_id):
         selected_choice.votes += 1
         selected_choice.save()
     return HttpResponseRedirect(reverse('polls:results', args=(question.id,)))
+
+def test(request):
+    try:
+        data = Question.objects.all()
+    except Exception as e:
+        print(e)
+    else:
+        df = read_frame(data)
+        df['本番'] = '本'
+        response = HttpResponse(content_type='text/csv; charset=CP932')
+        response['Content-Disposition'] = 'attachment; filename ="' + "test" + '.csv"'
+        df.to_csv(response, sep=",", index=False, encoding="utf-8-sig")
+        return response
